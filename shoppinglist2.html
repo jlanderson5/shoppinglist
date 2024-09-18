@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping List</title>
+  <!-- Include Vue.js 3 -->
+  <script src="https://unpkg.com/vue@next"></script>
+  <style>
+    /* Some simple styles */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .completed {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Shopping List</h1>
+    
+    <!-- Add input to add new items -->
+    <input v-model="newItem" @keyup.enter="addItem" placeholder="Add a new item" />
+
+    <!-- List rendering with conditional class -->
+    <ul>
+      <li v-for="(item, index) in items" :key="index">
+        <span :class="{ completed: item.purchased }">{{ item.name }}</span>
+        <button @click="toggleItem(index)">Toggle Purchased</button>
+        <button @click="removeItem(index)">Remove</button>
+      </li>
+    </ul>
+
+    <!-- Showing computed property total items -->
+    <p>Total items: {{ totalItems }}</p>
+  </div>
+
+  <script>
+    // Create a Vue.js app using the Options API
+    const app = Vue.createApp({
+      data() {
+        return {
+          newItem: '',
+          items: []
+        };
+      },
+      computed: {
+        totalItems() {
+          return this.items.length;
+        }
+      },
+      methods: {
+        addItem() {
+          if (this.newItem.trim() !== '') {
+            this.items.push({ name: this.newItem, purchased: false });
+            this.newItem = ''; // Clear the input after adding
+          }
+        },
+        toggleItem(index) {
+          this.items[index].purchased = !this.items[index].purchased;
+        },
+        removeItem(index) {
+          this.items.splice(index, 1);
+        }
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
